@@ -115,10 +115,10 @@ while True:
         os.makedirs("data/{}/{}/{}/".format(year,month,day),exist_ok=True)
 
         if not os.path.isfile('data/{}/{}/{}/{}.npy'.format(year,month,day,hr)):
-            np.save('data/{}/{}/{}/{}.npy'.format(year,month,day,hr),latlon)
+            np.savez_compressed('data/{}/{}/{}/{}.npz'.format(year,month,day,hr),data=latlon)
 
         else:
-            np.save('data/{}/{}/{}/{}_{}.npy'.format(year,month,day,hr,minute),latlon)
+            np.savez_compressed('data/{}/{}/{}/{}_{}.npz'.format(year,month,day,hr,minute),data=latlon)
 
         hour += 1
         counter = 0
