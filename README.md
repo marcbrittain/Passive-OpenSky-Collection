@@ -14,7 +14,7 @@ The OpenSky API python package will need to be cloned and installed from the [Op
 
 ## Usage
 
-`collectData.py` is simple script for passively collecting latitude and longitude values and saving the results in numpy arrays. While only latitude and longitude are being collected, this script can be easily extended to collect all of the return fields as listed here: [Returns](https://opensky-network.org/apidoc/python.html#opensky_api.StateVector).
+`collectData.py` is simple script for passively collecting `latitude, longitude, heading, icao24 address, velcity, and vertical rate` values and saving the results in numpy arrays. This script can be easily extended to collect all of the return fields as listed here: [Returns](https://opensky-network.org/apidoc/python.html#opensky_api.StateVector).
 
 The run script is as follows:
 ```python

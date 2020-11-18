@@ -18,6 +18,10 @@ PASSWORD = args.password
 # collecting lat/lon data
 latitudes = []
 longitudes = []
+heading = []
+icao24 = []
+velocity = []
+vertical_rate = []
 
 # hour represents the hour since the python script began, not the
 # hour of the day
@@ -44,6 +48,11 @@ while True:
         for s in states.states:
             latitudes.append(s.latitude)
             longitudes.append(s.longitude)
+            heading.append(s.heading)
+            icao24.append(s.icao24)
+            velocity.append(s.velocity)
+            vertical_rate.append(s.vertical_rate)
+
 
 
     # this will occur if there is no data in states
@@ -91,9 +100,13 @@ while True:
         sec = timeinfo.tm_sec
 
         # convert data to a matrix of (N, 2)
-        latlon = np.vstack([latitudes,longitudes]).T
+        latlon = np.vstack([latitudes,longitudes,heading,icao24,velocity,vertical_rate]).T
         latitudes = []
         longitudes = []
+        heading = []
+        icao24 = []
+        velocity = []
+        vertical_rate = []
 
         # save data
         os.makedirs("data/{}/{}/{}/".format(year,month,day),exist_ok=True)
