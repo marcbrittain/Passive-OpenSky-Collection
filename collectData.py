@@ -18,6 +18,7 @@ PASSWORD = args.password
 # collecting lat/lon data
 latitudes = []
 longitudes = []
+alt = []
 heading = []
 icao24 = []
 velocity = []
@@ -48,6 +49,7 @@ while True:
         for s in states.states:
             latitudes.append(s.latitude)
             longitudes.append(s.longitude)
+            alt.append(s.geo_altitude)
             heading.append(s.heading)
             icao24.append(s.icao24)
             velocity.append(s.velocity)
@@ -100,9 +102,10 @@ while True:
         sec = timeinfo.tm_sec
 
         # convert data to a matrix of (N, 2)
-        latlon = np.vstack([latitudes,longitudes,heading,icao24,velocity,vertical_rate]).T
+        latlon = np.vstack([latitudes,longitudes,alt,heading,icao24,velocity,vertical_rate]).T
         latitudes = []
         longitudes = []
+        alt = []
         heading = []
         icao24 = []
         velocity = []
