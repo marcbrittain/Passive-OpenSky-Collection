@@ -39,3 +39,7 @@ data = np.load("path/to/file.npz",allow_pickle=True)['data']
 Below is an example output from collecting 2 hours worth of data! Scripts to generate this plot are coming soon...
 
 ![2 Hours](2Hours.png)
+
+## Acknowledging
+
+If you found this repository useful or interesting, please help by starring the repo to help the visibility :)
