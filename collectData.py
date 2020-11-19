@@ -3,6 +3,7 @@ import time
 import os
 import numpy as np
 import argparse
+import datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--username", help="OpenSky Username")
@@ -15,18 +16,32 @@ BBOX = tuple(args.bbox)
 USERNAME = args.username
 PASSWORD = args.password
 
-# collecting lat/lon data
-latitudes = []
-longitudes = []
-alt = []
-heading = []
+cols = ['alert', 'altitude', 'callsign', 'geoaltitude', 'groundspeed', 'hour',
+        'icao24', 'last_position', 'latitude', 'longitude', 'onground', 'spi',
+        'squawk', 'timestamp', 'track', 'vertical_rate']
+
+alert = []
+# baro altitude
+altitude = []
+callsign = []
+geoaltitude = []
+groundspeed = []
+hour = []
 icao24 = []
-velocity = []
+last_position = []
+latitude = []
+longitude = []
+onground = []
+spi = []
+squawk = []
+timestamp = []
+track = []
 vertical_rate = []
+
 
 # hour represents the hour since the python script began, not the
 # hour of the day
-hour = 0
+record_hour = 0
 
 # counting the number of states collecting
 counter = 0
@@ -47,13 +62,25 @@ while True:
     try:
 
         for s in states.states:
-            latitudes.append(s.latitude)
-            longitudes.append(s.longitude)
-            alt.append(s.geo_altitude)
-            heading.append(s.heading)
+            latitude.append(s.latitude)
+            longitude.append(s.longitude)
+            geoaltitude.append(s.geo_altitude)
+            altitude.append(s.baro_altitude)
+            track.append(s.heading)
             icao24.append(s.icao24)
-            velocity.append(s.velocity)
+            groundspeed.append(s.velocity)
             vertical_rate.append(s.vertical_rate)
+            callsign.append(s.callsign)
+            last_position.append(datetime.datetime.fromtimestamp(s.time_position))
+            timestamp.append(datetime.datetime.fromtimestamp(s.last_contact))
+            date_info = time.gmtime(s.last_contact)
+            hour.append(datetime.datetime(date_info.tm_year,date_info.tm_mon,date_info.tm_mday,date_info.tm_hour))
+            spi.append(s.spi)
+            squawk.append(s.squawk)
+            alert.append(False)
+            onground.append(s.on_ground)
+
+
 
 
 
@@ -102,25 +129,38 @@ while True:
         sec = timeinfo.tm_sec
 
         # convert data to a matrix of (N, 2)
-        latlon = np.vstack([latitudes,longitudes,alt,heading,icao24,velocity,vertical_rate]).T
-        latitudes = []
-        longitudes = []
-        alt = []
-        heading = []
+        opensky_data = np.vstack([alert, altitude, callsign, geoaltitude, groundspeed,
+                            hour, icao24, last_position, latitude, longitude,
+                            onground, spi, squawk, timestamp, track, vertical_rate]).T
+
+        alert = []
+        # baro altitude
+        altitude = []
+        callsign = []
+        geoaltitude = []
+        groundspeed = []
+        hour = []
         icao24 = []
-        velocity = []
+        last_position = []
+        latitude = []
+        longitude = []
+        onground = []
+        spi = []
+        squawk = []
+        timestamp = []
+        track = []
         vertical_rate = []
 
         # save data
         os.makedirs("data/{}/{}/{}/".format(year,month,day),exist_ok=True)
 
         if not os.path.isfile('data/{}/{}/{}/{}.npy'.format(year,month,day,hr)):
-            np.savez_compressed('data/{}/{}/{}/{}.npz'.format(year,month,day,hr),data=latlon)
+            np.savez_compressed('data/{}/{}/{}/{}.npz'.format(year,month,day,hr),data=opensky_data)
 
         else:
-            np.savez_compressed('data/{}/{}/{}/{}_{}.npz'.format(year,month,day,hr,minute),data=latlon)
+            np.savez_compressed('data/{}/{}/{}/{}_{}.npz'.format(year,month,day,hr,minute),data=opensky_data)
 
-        hour += 1
+        record_hour += 1
         counter = 0
 
-        print("Hours Processed: {}".format(hour))
+        print("Hours Processed: {}".format(record_hour))
