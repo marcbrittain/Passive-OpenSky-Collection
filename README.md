@@ -42,4 +42,4 @@ Below is an example output from collecting 2 hours worth of data! Scripts to gen
 
 ## Acknowledging
 
-If you found this repository useful or interesting, please help by starring the repo to help the visibility :)
+If you found this repository useful or interesting, please help by adding a star to help the visibility :)
